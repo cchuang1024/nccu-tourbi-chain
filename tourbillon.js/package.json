@@ -1,0 +1,20 @@
+{
+  "name": "tourbillon",
+  "version": "0.0.1",
+  "description": "Tourbillon is an Ethereum Oracle Service for timestamping and TAA/TSA service.",
+  "main": "index.js",
+  "author": "gemhuang",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "bignumber.js": "^9.0.0",
+    "ethereumjs-tx": "^2.1.1",
+    "ethereumjs-util": "^6.2.0",
+    "ethereumjs-wallet": "^0.6.3",
+    "ethers": "^4.0.40",
+    "js-sha3": "^0.8.0",
+    "secp256k1": "^3.7.1",
+    "solc": "^0.5.13",
+    "strip-hex-prefix": "^1.0.0",
+    "web3": "^1.2.4"
+  }
+}

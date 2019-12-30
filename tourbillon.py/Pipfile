@@ -1,0 +1,28 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pylint = "*"
+pytest = "*"
+
+[packages]
+web3 = "*"
+pyrsistent = "*"
+ntplib = "*"
+plyvel = "*"
+py-solc = "*"
+pyyaml = "*"
+toml = "*"
+sqlalchemy = "*"
+flask = "*"
+arrow = "*"
+
+[requires]
+python_version = "3.8"
+
+[scripts]
+site = "python -m tourbillon.wind"
+test = "python -m pytest"
+safe = "python -m tourbillon.safe"

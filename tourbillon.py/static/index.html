@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tourbillon</title>
+</head>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha256-L/W5Wfqfa0sdBNIKN9cG6QA5F2qx4qICmU2VgLruv9Y=" crossorigin="anonymous"/>
+<link href="https://fonts.googleapis.com/css?family=Fira+Mono|Noto+Sans+TC&display=swap" rel="stylesheet">
+
+<style>
+    .text {
+        font-family: 'Noto Sans TC', sans-serif;
+    }
+
+    .hex {
+        font-family: 'Fira Mono', monospace;
+    }
+
+    .header {
+        font-size: 2em;
+    }
+
+    #header-title {
+        float: left;
+    }
+
+    #header-time {
+        float: right;
+        font-size: 0.6em;
+    }
+
+    #records {
+        width: 100%;
+    }
+
+    .record {
+        font-size: 1em;
+    }
+</style>
+
+<body>
+
+<div class="header text">
+    <span id="header-title">Tourbillon Surface</span>
+    <span id="header-time">現在時間：<span id="current-time"></span></span>
+</div>
+<div class="content">
+    <table class="table-bordered" id="records">
+        <thead>
+        <tr>
+            <th>時間</th>
+            <th>使用者</th>
+            <th>存證資訊</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/esm/popper.min.js"
+        integrity="sha256-g491Yv8nsEVSfQ6aonhVVFXoX5vF2uJQIU0hVNRg4JQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha256-WqU1JavFxSAMcLP2WIOI+GB2zWmShMI82mTpLDcqFUg=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsviews/1.0.5/jsviews.min.js"
+        integrity="sha256-dYxa74n6cQLUD1XVkNDV/q+6rg66Y6Xh/f9uDjQpKJs=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsrender/1.0.5/jsrender.min.js"
+        integrity="sha256-xqPIiYCGCnDO2BbZdPplAc1Rc5u+UHlQzMawCsWosEo=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.min.js"
+        integrity="sha256-VeNaFBVDhoX3H+gJ37DpT/nTuZTdjYro9yBruHjVmoQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ramda/0.26.1/ramda.min.js"
+        integrity="sha256-43x9r7YRdZpZqTjDT5E0Vfrxn1ajIZLyYWtfAXsargA=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"
+        integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
+
+<script type="text/x-jsrender" id="tpl-now">
+<em>{{:now}}</em>
+
+</script>
+
+<script type="text/x-jsrender" id="tpl-record">
+    <tr>
+        <td class='record text'>{{:record_time}}</td>
+        <td class='record text'>{{:user}}</td>
+        <td class='record hex'>{{:evidence}}</td>
+        <td class='record text'>{{:operation}}</td>
+    </tr>
+
+</script>
+
+<script type="application/javascript">
+    function show_current_time() {
+        $tplNow = $.templates('#tpl-now');
+        $now = $tplNow({
+            now: moment().format('YYYY-MM-DD HH:mm:ss')
+        });
+
+        $('#current-time').empty();
+        $('#current-time').append($now);
+    }
+
+    function insert_record() {
+        let record = {
+            record_time: moment().format('YYYY-MM-DD HH:mm:ss'),
+            user: 'Alice',
+            evidence: '3bc51062973c458d5a6f2d8d64a023246354ad7e064b1e4e009ec8a0699a3043',
+            operation: '存證'
+        };
+
+        $tplRecord = $.templates('#tpl-record');
+        $record = $tplRecord(record);
+        $('#records tr:first').after($record);
+
+        if ($('#records tr').length === 50) {
+            $('#records tr:last-of-type').detach();
+        }
+    }
+
+    $(document).ready(function () {
+        show_current_time();
+        window.setInterval(show_current_time, 1000);
+        window.setInterval(insert_record, 1000);
+    });
+</script>
+
+
+</body>
+</html>

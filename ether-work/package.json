@@ -1,0 +1,23 @@
+{
+  "name": "ether-work",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "bip39": "^3.0.2",
+    "ethereumjs-tx": "^2.1.2",
+    "ethereumjs-util": "^6.2.0",
+    "ethereumjs-wallet": "^0.6.3",
+    "ethers": "^4.0.40",
+    "lodash": "^4.17.15",
+    "rambda": "^4.4.0",
+    "solc": "^0.6.0",
+    "web3": "^1.2.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

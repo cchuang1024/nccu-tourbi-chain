@@ -1,0 +1,15 @@
+time_server:
+  - clock.stdtime.gov.tw
+  - watch.stdtime.gov.tw
+  - tick.usno.navy.mil
+
+local_database: db/boite_de_bijoux.db
+
+eth_entry_point: http://localhost:8545/
+owner_keystore: config/owner_keystore
+
+contract_address:
+  tourbillon: 0
+  breguet: 0
+  boite_de_bijoux: 0
+  tiffany: 0
