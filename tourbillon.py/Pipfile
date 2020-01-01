@@ -6,9 +6,11 @@ verify_ssl = true
 [dev-packages]
 pylint = "*"
 pytest = "*"
+eth-tester = "*"
+py-evm = "*"
 
 [packages]
-web3 = "*"
+web3 = {extras = ["tester"],version = "*"}
 pyrsistent = "*"
 ntplib = "*"
 plyvel = "*"

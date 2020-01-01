@@ -1,32 +1,71 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.6.0;
+// pragma experimental ABIEncoderV2;
 
 contract Tourbillon {
+    struct TimestampAuthorization {
+        string timestamp;
+        string signature;
+    }
+
+    struct Treasure {
+        string myDigest;
+        string mySign;
+    }
+
     address private owner;
-    timestamp_authorize private _timestamp;
 
-    struct timestamp_authorize {
-        uint timestamp;
-        bytes signature;
-    }
+    mapping(address => mapping(uint => Treasure)) private myArchive;
+    mapping(address => mapping(uint => TimestampAuthorization)) private tsArchive;
 
-    event WhatTimeIsIt(address sender);
-    event ItsTime(address sender, timestamp_authorize tsa);
+    mapping(address => uint) private mySerial;
+    mapping(address => uint) private ledger;
 
-    constructor () {
+    event WhatTimeIsIt(address myAddr, uint serial);
+
+    constructor () public {
         owner = msg.sender;
-        _timestamp = timestamp_authorize(0, hex'00');
     }
 
-    function whatTimeIsIt() public {
-        emit WhatTimeIsIt(msg.sender);
+    function saveMyTreasure(address addr, string memory digest, string memory sign) public {
+        require(addr != address(0));
+
+        uint serial = mySerial[addr] + 1;
+
+        myArchive[addr][serial] = Treasure(digest, sign);
+        mySerial[addr] = serial;
+
+        emit WhatTimeIsIt(addr, serial);
     }
 
-    function itsTime(uint timestamp, bytes signature) public {
-        _timestamp = timestamp_authorize(timestamp, signature);
-        emit ItsTime(msg.sender, _timestamp);
+    function checkMySerial(address addr) public view returns (uint) {
+        require(addr != address(0));
+        return mySerial[addr];
     }
 
-    function getTime() public returns (timestamp_authorize) {
-        return _timestamp;
+    function checkMyTreasure(address addr, uint serial) public view returns (string memory,
+                                                                             string memory,
+                                                                             string memory,
+                                                                             string memory) {
+        require(addr != address(0));
+        require(serial <= mySerial[addr]);
+
+        return (myArchive[addr][serial].myDigest,
+                myArchive[addr][serial].mySign,
+                tsArchive[addr][serial].timestamp,
+                tsArchive[addr][serial].signature);
+    }
+
+    function itsTime(address myAddr, uint serial, string memory timestamp, string memory signature) public {
+        require(myAddr != address(0));
+        require(serial <= mySerial[myAddr]);
+
+        tsArchive[myAddr][serial] = TimestampAuthorization(timestamp, signature);
+    }
+
+    function getTime(address myAddr, uint serial) public view returns (string memory, string memory) {
+        require(myAddr != address(0));
+        require(serial <= mySerial[myAddr]);
+
+        return (tsArchive[myAddr][serial].timestamp, tsArchive[myAddr][serial].signature);
     }
 }
