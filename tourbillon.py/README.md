@@ -1,5 +1,28 @@
 # TourbiChain - 時戳 oracle 服務
 
+## 安裝
+
+1. Python: 3.8
+1. Pkg: pipenv
+
+安裝完 `pipenv` 之後，執行：
+
+```
+pipenv install
+```
+
+進入開發環境：
+
+```
+pipenv shell
+```
+
+執行測試：
+
+```
+pipenv run test
+```
+
 ## Module Toubillon - 服務方
 
 ### 啟動服務
