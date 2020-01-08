@@ -75,7 +75,6 @@ def init(config_file, passphrase):
     tourbillon_address = config['contract_address']['tourbillon']
     breguet_address = config['contract_address']['breguet']
     tourbillon_obj = None
-    breguet_obj = None
 
     if tourbillon_address.endswith('sol') or breguet_address.endswith('sol'):
         tourbillon_obj, breguet_obj = deploy_contract(tourbillon_address, breguet_address,
@@ -86,7 +85,7 @@ def init(config_file, passphrase):
     else:
         tourbillon_file = crown.ContractFile('Tourbillon.sol', 'contracts/Tourbillon.sol')
         bytecode, abi = crown.compile_contract(tourbillon_file, 'Tourbillon')
-        tourbillon_obj = target_net.eth.contract(address=breguet_address, abi=abi)
+        tourbillon_obj = target_net.eth.contract(address=tourbillon_address, abi=abi)
 
     context = m(engine=engine,
                 queue=queue,
