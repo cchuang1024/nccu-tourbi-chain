@@ -94,36 +94,40 @@
 
 <script type="application/javascript">
     function show_current_time() {
-        $tplNow = $.templates('#tpl-now');
-        $now = $tplNow({
-            now: moment().format('YYYY-MM-DD HH:mm:ss')
-        });
+        $.get('/now', function(result){
+            $tplNow = $.templates('#tpl-now');
+            $now = $tplNow({
+                now: result.now // moment().format('YYYY-MM-DD HH:mm:ss')
 
-        $('#current-time').empty();
-        $('#current-time').append($now);
+            });
+
+            $('#current-time').empty();
+            $('#current-time').append($now);
+        });
     }
 
-    function insert_record() {
-        let record = {
-            record_time: moment().format('YYYY-MM-DD HH:mm:ss'),
-            user: 'Alice',
-            evidence: '3bc51062973c458d5a6f2d8d64a023246354ad7e064b1e4e009ec8a0699a3043',
-            operation: '存證'
-        };
+    function get_record() {
+        $.get('/records', function(result){
+            if(result.records != 'empty'){
+                for(let record in result.records){
+                    $tplRecord = $.templates('#tpl-record');
+                    $record = $tplRecord(record);
+                    $('#records tr:first').after($record);
 
-        $tplRecord = $.templates('#tpl-record');
-        $record = $tplRecord(record);
-        $('#records tr:first').after($record);
-
-        if ($('#records tr').length === 50) {
-            $('#records tr:last-of-type').detach();
-        }
+                    /*
+                    if ($('#records tr').length === 50) {
+                        $('#records tr:last-of-type').detach();
+                    }
+                    */
+                }
+            }
+        });
     }
 
     $(document).ready(function () {
         show_current_time();
         window.setInterval(show_current_time, 1000);
-        window.setInterval(insert_record, 1000);
+        window.setInterval(get_record, 1000);
     });
 </script>
 

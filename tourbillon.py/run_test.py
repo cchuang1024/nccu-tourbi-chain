@@ -22,7 +22,7 @@ def handle_event(event, tourb, w3, private_key):
     time = calibre.get_now()
     sig = crown.sign_hash(crown.convert_to_hash(time), private_key).hex()
 
-    result = tourb.functions.itsTime(addr, serial, time, sig).transact()
+    result = tourb.functions.timeIsIt(time, sig, addr, serial).transact()
     receipt = w3.eth.waitForTransactionReceipt(result)
     print("it's time: {}".format(result, receipt))
 

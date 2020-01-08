@@ -14,7 +14,7 @@ contract SimpleTime {
         emit WhatTimeIsIt(requestor);
     }
 
-    function itsTime(string memory time) public {
+    function timeIsIt(string memory time) public {
         timestamp = time;
     }
 

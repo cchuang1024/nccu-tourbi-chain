@@ -1,15 +1,11 @@
-time_server:
-  - clock.stdtime.gov.tw
-  - watch.stdtime.gov.tw
-  - tick.usno.navy.mil
-
-local_database: db/boite_de_bijoux.db
-
-eth_entry_point: http://localhost:8545/
-owner_keystore: config/owner_keystore
-
 contract_address:
-  tourbillon: 0
-  breguet: 0
-  boite_de_bijoux: 0
-  tiffany: 0
+  breguet: '0x77FCAa201C7A9e53876E6CEaadB7434c9652B1B8'
+  tourbillon: '0xb2D2Aa035D2e487903c08c4EEd09E4D083E60763'
+eth_entry_point: http://127.0.0.1:8545/
+local_database: db/tourbillon.db
+owner_keystore: config/owner_keystore
+time_server:
+- clock.stdtime.gov.tw
+- watch.stdtime.gov.tw
+- tick.usno.navy.mil
+tourbillon_api_url: http://127.0.0.1:5000/tourbillon

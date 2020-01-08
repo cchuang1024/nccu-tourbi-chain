@@ -6,11 +6,8 @@ verify_ssl = true
 [dev-packages]
 pylint = "*"
 pytest = "*"
-eth-tester = "*"
-py-evm = "*"
 
 [packages]
-web3 = {extras = ["tester"],version = "*"}
 pyrsistent = "*"
 ntplib = "*"
 plyvel = "*"
@@ -20,6 +17,11 @@ toml = "*"
 sqlalchemy = "*"
 flask = "*"
 arrow = "*"
+cython = "*"
+gevent = {git = "git://github.com/gevent/gevent.git"}
+goless = "*"
+flask-restful = "*"
+web3 = "*"
 
 [requires]
 python_version = "3.8"

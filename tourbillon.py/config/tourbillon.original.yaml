@@ -1,0 +1,11 @@
+contract_address:
+  breguet: contracts/Breguet.sol
+  tourbillon: contracts/Tourbillon.sol
+eth_entry_point: http://127.0.0.1:8545/
+local_database: db/tourbillon.db
+owner_keystore: config/owner_keystore
+time_server:
+- clock.stdtime.gov.tw
+- watch.stdtime.gov.tw
+- tick.usno.navy.mil
+tourbillon_api_url: http://127.0.0.1:5000/tourbillon

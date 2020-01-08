@@ -2,6 +2,7 @@
 Crown - 表冠，介接 ETH 進行合約操作
 """
 import json
+
 from collections import namedtuple
 
 from eth_keyfile import extract_key_from_keyfile
@@ -29,8 +30,12 @@ def load_keystore(keystore, passphrase):
     return keys.PrivateKey(priv), acc
 
 
-def convert_to_hash(timestamp):
-    return keccak(timestamp.encode('utf-8'))
+def convert_to_hash(text):
+    return keccak(text.encode('utf-8'))
+
+
+def convert_bin_to_hash(binary):
+    return keccak(binary)
 
 
 def sign_hash(hash, priv):
@@ -52,7 +57,7 @@ def verify_signature(hash, sig, pub):
     return keys.ecdsa_verify(hash, sign, public)
 
 
-######### NOT TESTED YET ##########
+######### NOT FULL TESTED YET ##########
 
 def init_target_net_by_web(provider_url, account, **request_kwargs):
     target_net = Web3(Web3.HTTPProvider(provider_url, request_kwargs=request_kwargs))

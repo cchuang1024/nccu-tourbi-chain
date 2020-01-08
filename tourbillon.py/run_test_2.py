@@ -17,7 +17,7 @@ def handle_event(event, simple, w3):
     print('requestor {}'.format(event['args']['requestor']))
 
     now = calibre.get_now()
-    result = simple.functions.itsTime(now).transact()
+    result = simple.functions.timeIsIt(now).transact()
     receipt = w3.eth.waitForTransactionReceipt(result)
     print("it's time receipt {}".format(receipt))
 
