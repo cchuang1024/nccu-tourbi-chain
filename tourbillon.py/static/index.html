@@ -108,17 +108,16 @@
 
     function get_record() {
         $.get('/records', function(result){
+            console.log('result: ', result);
+
             if(result.records != 'empty'){
-                for(let record in result.records){
+                for(let index = 0; index < result.records.length; index++){
+                    let record = result.records[index];
+                    console.log('record: ', record);
+
                     $tplRecord = $.templates('#tpl-record');
                     $record = $tplRecord(record);
                     $('#records tr:first').after($record);
-
-                    /*
-                    if ($('#records tr').length === 50) {
-                        $('#records tr:last-of-type').detach();
-                    }
-                    */
                 }
             }
         });
