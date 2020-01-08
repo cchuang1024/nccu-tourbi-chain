@@ -1,16 +1,25 @@
 pragma solidity ^0.6.0;
+// pragma experimental ABIEncoderV2;
 
-contract Breguet {
+abstract contract Tourbillon {
+    function saveMyTreasure(address addr, string memory digest, string memory sign) public virtual returns (uint);
+    function timeIsIt(string memory timestamp, string memory signature, address myAddr, uint serial) public virtual;
+    function checkMySerial(address addr) public virtual view returns (uint);
+    function checkMyTime(address myAddr, uint serial) public virtual view returns (string memory, string memory);
+    function checkMyTreasure(address addr, uint serial) public virtual view returns (string memory, string memory);
+    function setOwnerPublicKey(string memory _ownerPublicKey) public virtual;
+    function setTourbillonAPIURL(string memory _tourbillonAPIURL) public virtual;
+    function getOwnerPublicKey() public virtual view returns (string memory);
+    function getTourbillonAPIURL() public virtual view returns (string memory);
+}
+
+contract Breguet is Tourbillon{
+    Tourbillon private tourbillon;
     address private owner;
-    address private tourbillon;
-    string private ownerPublicKey;
-    string private tourbillonAPIURL;
 
-    constructor (address _tourbillon, string memory _ownerPublicKey, string memory _tourbillonAPIURL) public {
+    constructor (address _tourbillon) public {
         owner = msg.sender;
-        tourbillon = _tourbillon;
-        ownerPublicKey = _ownerPublicKey;
-        tourbillonAPIURL = _tourbillonAPIURL;
+        tourbillon = Tourbillon(_tourbillon);
     }
 
     modifier onlyOwner() {
@@ -18,39 +27,39 @@ contract Breguet {
         _;
     }
 
-    function setTourbillonAddress(address _tourbillon) public onlyOwner {
-        require(_tourbillon != address(0));
-        tourbillon = _tourbillon;
+    function saveMyTreasure(address addr, string memory digest, string memory sign) public override returns (uint){
+        return tourbillon.saveMyTreasure(addr, digest, sign);
     }
 
-    function setOwnerPublicKey(string memory _ownerPublicKey) public onlyOwner {
-        ownerPublicKey = _ownerPublicKey;
+    function timeIsIt(string memory timestamp, string memory signature, address myAddr, uint serial) public override{
+        tourbillon.timeIsIt(timestamp, signature, myAddr, serial);
     }
 
-    function setTourbillonAPIURL(string memory _tourbillonAPIURL) public onlyOwner {
-        tourbillonAPIURL = _tourbillonAPIURL;
+    function checkMySerial(address addr) public override view returns (uint){
+        return tourbillon.checkMySerial(addr);
     }
 
-    function getOwnerPublicKey() public view returns (string memory) {
-        return ownerPublicKey;
+    function checkMyTime(address myAddr, uint serial) public override view returns (string memory, string memory){
+        return tourbillon.checkMyTime(myAddr, serial);
     }
 
-    function getTourbillonAPIURL() public view returns (string memory) {
-        return tourbillonAPIURL;
+    function checkMyTreasure(address addr, uint serial) public override view returns (string memory, string memory){
+        return tourbillon.checkMyTreasure(addr, serial);
     }
 
-    fallback () external{
-        address contractAddress = tourbillon;
-        assembly {
-            let ptr := mload(0x40)
-            calldatacopy(ptr, 0, calldatasize())
-            let result := delegatecall(gas(), contractAddress, ptr, calldatasize(), 0, 0)
-            let size := returndatasize()
-            returndatacopy(ptr, 0, size)
+    function setOwnerPublicKey(string memory _ownerPublicKey) public override onlyOwner{
+        tourbillon.setOwnerPublicKey(_ownerPublicKey);
+    }
 
-            switch result
-            case 0 {revert(ptr, size)}
-            default {return (ptr, size)}
-        }
+    function setTourbillonAPIURL(string memory _tourbillonAPIURL) public override onlyOwner{
+        tourbillon.setTourbillonAPIURL(_tourbillonAPIURL);
+    }
+
+    function getOwnerPublicKey() public override view returns (string memory){
+        return tourbillon.getOwnerPublicKey();
+    }
+
+    function getTourbillonAPIURL() public override view returns (string memory){
+        return tourbillon.getTourbillonAPIURL();
     }
 }

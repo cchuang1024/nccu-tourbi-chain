@@ -1,11 +1,24 @@
 import goless
 import threading
 import time
+from threading import Thread
+
+from web3.auto import w3
 
 import tourbillon
 from tourbillon import calibre
 from tourbillon import crown
 from tourbillon import mainspring
+
+
+def build_monitor():
+    target_net = tourbillon.context['target_net']
+    priv_key = tourbillon.context['private_key']
+    tourb = tourbillon.context['tourbillon_object']
+
+    event_filter = tourb.events.WhatTimeIsIt.createFilter(fromBlock=0, toBlock='latest')
+    monitor = Thread(target=listen_event, args=(event_filter, 1, tourb, w3, priv_key), daemon=True)
+    return monitor
 
 
 def listen_event(event_filter, sleep_time, contract, target_net, owner_priv_key):

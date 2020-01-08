@@ -4,7 +4,8 @@ Mainspring - 發條，資料儲存模組
 
 from sqlalchemy import Table, MetaData, select, create_engine, column, text
 from collections import namedtuple
-from tourbillon import context
+
+import tourbillon
 
 TimestampAuthor = namedtuple('TimestampAuthor', ['address', 'serial',
                                                  'digest', 'digest_signature',
@@ -42,7 +43,7 @@ def get_data(table, id, engine):
 
 
 def save_timestamp_author(ts, ts_sign, addr, serial, digest, digest_sign):
-    engine = context['engine']
+    engine = tourbillon.context['engine']
     table = init_table('timestamp_authorize', engine)
     data = TimestampAuthor(addr, serial, digest, digest_sign, ts, ts_sign)
     id = save_data(data, table, engine)

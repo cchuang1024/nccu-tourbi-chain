@@ -35,6 +35,17 @@ def init_queue():
     queue = Queue()
 
 
+def deploy_contract(tourbillon_file, breguet_file, public_key, api_url, account, target_net):
+    target_net.eth.defaultAccount = account.address
+    tourbillon_object = crown.deploy_contract(crown.ContractFile("Tourbillon.sol", tourbillon_file),
+                                              "Tourbillon", target_net,
+                                              public_key, api_url)
+    breguet_object = crown.deploy_contract(crown.ContractFile("Breguet.sol", breguet_file),
+                                           "Breguet", target_net,
+                                           tourbillon_object.address)
+    return tourbillon_object, breguet_object
+
+
 def init(config_file, passphrase):
     global context, queue
 
@@ -63,27 +74,19 @@ def init(config_file, passphrase):
     # TODO: check contract address
     tourbillon_address = config['contract_address']['tourbillon']
     breguet_address = config['contract_address']['breguet']
-    tourbillon_object = None
-    breguet_object = None
+    tourbillon_obj = None
+    breguet_obj = None
 
     if tourbillon_address.endswith('sol') or breguet_address.endswith('sol'):
-        target_net.eth.defaultAccount = account.address
-
-        tourbillon_object = crown.deploy_contract(crown.ContractFile("Tourbillon.sol", tourbillon_address),
-                                                  "Tourbillon",
-                                                  target_net)
-        tourbillon_address = tourbillon_object.address
-
-        breguet_object = crown.deploy_contract(crown.ContractFile("Breguet.sol", breguet_address),
-                                               "Breguet",
-                                               target_net,
-                                               tourbillon_address, public_key, tourbillon_api_url)
-        breguet_address = breguet_object.address
-
-        config['contract_address']['tourbillon'] = tourbillon_address
-        config['contract_address']['breguet'] = breguet_address
-
+        tourbillon_obj, breguet_obj = deploy_contract(tourbillon_address, breguet_address,
+                                                      public_key, tourbillon_api_url, account, target_net)
+        config['contract_address']['tourbillon'] = tourbillon_obj.address
+        config['contract_address']['breguet'] = breguet_obj.address
         update_config(config, config_file)
+    else:
+        tourbillon_file = crown.ContractFile('Tourbillon.sol', 'contracts/Tourbillon.sol')
+        bytecode, abi = crown.compile_contract(tourbillon_file, 'Tourbillon')
+        tourbillon_obj = target_net.eth.contract(address=breguet_address, abi=abi)
 
     context = m(engine=engine,
                 queue=queue,
@@ -92,12 +95,7 @@ def init(config_file, passphrase):
                 account=account,
                 target_net=target_net,
                 api_url=tourbillon_api_url,
-                tourbillon_address=tourbillon_address,
-                breguet_address=breguet_address,
-                tourbillon_object=tourbillon_object,
-                breguet_object=breguet_object)
-
-    print('init context {}'.format(context))
+                tourbillon_object=tourbillon_obj)
 
 
 def init_config(config_file):

@@ -41,10 +41,11 @@ if __name__ == '__main__':
     key_hex = '8FCA9928DDE93BF36F1068FBBA94398D9C1CB574A013F0611EE1DE097A7ADDAB'
     alice = Account.from_key(key_hex)
     alice_priv = crown.init_private_key_from_hex(bytes.fromhex(key_hex))
+    alice_pub = crown.get_pub_from_priv(alice_priv)
     w3.eth.defaultAccount = alice.address
 
     tourb_file = crown.ContractFile('Tourbillon.sol', 'contracts/Tourbillon.sol')
-    tourb = crown.deploy_contract(tourb_file, 'Tourbillon', w3)
+    tourb = crown.deploy_contract(tourb_file, 'Tourbillon', w3, alice_pub.hex(), 'http://127.0.0.1:5000/tourbillon')
     print('tourbillon address: {}'.format(tourb.address))
 
     filter = tourb.events.WhatTimeIsIt.createFilter(fromBlock='latest')

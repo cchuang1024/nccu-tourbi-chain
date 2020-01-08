@@ -13,6 +13,8 @@ contract Tourbillon {
     }
 
     address private owner;
+    string private ownerPublicKey;
+    string private tourbillonAPIURL;
 
     mapping(address => mapping(uint => Treasure)) private myArchive;
     mapping(address => mapping(uint => TimestampAuthorization)) private tsArchive;
@@ -20,8 +22,15 @@ contract Tourbillon {
 
     event WhatTimeIsIt(address myAddr, uint serial, string digest, string sign);
 
-    constructor () public {
+    constructor (string memory _ownerPublicKey, string memory _tourbillonAPIURL) public {
         owner = msg.sender;
+        ownerPublicKey = _ownerPublicKey;
+        tourbillonAPIURL = _tourbillonAPIURL;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
     }
 
     function saveMyTreasure(address addr, string memory digest, string memory sign) public returns (uint){
@@ -61,5 +70,21 @@ contract Tourbillon {
         require(serial <= mySerial[addr]);
 
         return (myArchive[addr][serial].myDigest, myArchive[addr][serial].mySign);
+    }
+
+    function setOwnerPublicKey(string memory _ownerPublicKey) public onlyOwner {
+        ownerPublicKey = _ownerPublicKey;
+    }
+
+    function setTourbillonAPIURL(string memory _tourbillonAPIURL) public onlyOwner {
+        tourbillonAPIURL = _tourbillonAPIURL;
+    }
+
+    function getOwnerPublicKey() public view returns (string memory) {
+        return ownerPublicKey;
+    }
+
+    function getTourbillonAPIURL() public view returns (string memory) {
+        return tourbillonAPIURL;
     }
 }
